@@ -1,7 +1,8 @@
 #!/usr/bin/python
 from praytimes import PrayTimes
-from datetime import date
 from settings import SettingsManager
+from alarmdaemon import AlarmDaemon
+from datetime import date
 
 import configparser
 import gi
@@ -125,6 +126,8 @@ class AthanWindow(Gtk.Window):
         output = ''
         for i in ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Midnight']:
             output += (i + ': ' + times[i.lower()] + "\n")
+        self.alarm = AlarmDaemon()
+        self.alarm.schedule_alarm(times)
         return output
 
     def showSettings(self, widget='clicked'):

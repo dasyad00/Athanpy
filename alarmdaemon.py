@@ -1,4 +1,6 @@
 #!/usr/bin/python
+from praytimes import PrayTimes
+
 import os
 import threading
 import sched, time
@@ -15,7 +17,6 @@ APPINDICATOR_ID = 'ATHANPY_INDICATOR'
 class AlarmDaemon():
     def __init__(self):
         self.scheduler = sched.scheduler(time.time, time.sleep)
-        self.schedule_alarm('19:26', 'test')
 
     def main(self):
         indicator = appindicator.Indicator.new(APPINDICATOR_ID, gtk.STOCK_INFO, appindicator.IndicatorCategory.SYSTEM_SERVICES)
@@ -44,18 +45,26 @@ class AlarmDaemon():
         print('Time for ', athan_name, '!')
         input('Press enter to stop')
         self.play_athan.stop()
+        if athan_name == 'Isha':
+            pass
 
-    def schedule_alarm(self, str_time, athan_name):
-        hour = str_time[0:2]
-        mins = str_time[3:]
-        alarm_time = datetime.datetime.today()
-        alarm_time = alarm_time.replace(
-            hour=int(str_time[0:2]),
-            minute=int(str_time[3:]),
-            second=0
-        )
-        self.next_alarm = self.scheduler.enterabs(alarm_time.timestamp(), 1, self.alarm_action, argument={athan_name})
-        print('Alarm set for:', alarm_time)
+    # TODO use PrayTims class to get Athan names
+    def schedule_alarm(self, times):
+#        now = time.strftime("%H:%M")
+        now = datetime.datetime.now()
+        for p in ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Midnight']:
+            athan_time = datetime.datetime.today()
+            athan_time = athan_time.replace(
+                hour=int(times[p.lower()][0:2]),
+                minute=int(times[p.lower()][3:]),
+                second=0,
+                microsecond=0
+            )
+            if now < athan_time:
+                self.next_alarm = self.scheduler.enterabs(
+                        athan_time.timestamp(), 1, self.alarm_action, argument={p})
+                print('Athan for ', p, ' set at:', athan_time)
+                break
 
     def start_alarm(self, action):
         daemon = threading.Thread(target=self.scheduler.run)
@@ -69,7 +78,7 @@ class AlarmDaemon():
     def quit(source):
         gtk.main_quit()
 
-print('making daemon')
-alarm = AlarmDaemon()
-alarm.main()
-print('end')
+#print('making daemon')
+#alarm = AlarmDaemon()
+#alarm.main()
+#print('end')

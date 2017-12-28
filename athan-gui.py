@@ -1,7 +1,8 @@
 #!/usr/bin/python
 from praytimes import PrayTimes
-from datetime import date
 from settings import SettingsManager
+from alarmdaemon import AlarmDaemon
+from datetime import date
 
 import configparser
 import gi
@@ -89,6 +90,7 @@ class SettingsDialog(Gtk.Dialog):
         cfg['Location']['calcCode'] = self.boxCalcCode.get_active_text()
         with open('athanpy.cfg', 'w') as cfgfile:
             cfg.write(cfgfile)
+        # TODO refresh text when new settings applied
 
 class AthanWindow(Gtk.Window):
     def __init__(self):
@@ -113,18 +115,14 @@ class AthanWindow(Gtk.Window):
 
     def get_prayertime_text(self):
         settingsmgr.refreshVariables(self.showSettings)
-        self.lat = settingsmgr.lat
-        self.lon = settingsmgr.lon
-        self.tz  = settingsmgr.tz
-        self.calcCode  = settingsmgr.calcCode
-        prayTimes.setMethod(str(settingsmgr.calcCode))
+        settingsmgr.calcTimes()
 
-        print("Settings chosen: ", self.lat, self.lon, self.tz)
-        # getTimes(self, date, coords, timezone)
-        times = prayTimes.getTimes(date.today(), (self.lat, self.lon), self.tz);
+        times = settingsmgr.times
         output = ''
         for i in ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Midnight']:
             output += (i + ': ' + times[i.lower()] + "\n")
+        self.alarm = AlarmDaemon()
+        self.alarm.schedule_alarm(times)
         return output
 
     def showSettings(self, widget='clicked'):

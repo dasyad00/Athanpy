@@ -38,19 +38,15 @@ def setup_wizard():
         cfg.write(cfgfile)
 
 settings.refreshVariables(setup_wizard)
+settings.calcTimes()
 
 # Does not work
 #print("from athanterm.py: ", str(calcCode))
 #prayTimes = PrayTimes(str(calcCode))
 #cfg.read('athanpy.cfg')
-lat = float(settings.lat)
-lon = float(settings.lon)
-tz  = float(settings.tz)
-calcCode = settings.calcCode
-prayTimes.setMethod(str(calcCode))
 
-print("Settings chosen: ", lat, lon, tz)
+#print("Settings chosen: ", lat, lon, tz)
 # getTimes(self, date, coords, timezone)
-times = prayTimes.getTimes(date.today(), (lat, lon), tz);
+times = settings.times
 for i in ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Midnight']:
     print(i + ': ' + times[i.lower()])

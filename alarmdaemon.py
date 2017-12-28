@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from praytimes import PrayTimes
+from settings import SettingsManager
 
 import os
 import threading
@@ -17,6 +17,7 @@ APPINDICATOR_ID = 'ATHANPY_INDICATOR'
 class AlarmDaemon():
     def __init__(self):
         self.scheduler = sched.scheduler(time.time, time.sleep)
+        self.settingsmgr = SettingsManager()
 
     def main(self):
         indicator = appindicator.Indicator.new(APPINDICATOR_ID, gtk.STOCK_INFO, appindicator.IndicatorCategory.SYSTEM_SERVICES)
@@ -46,7 +47,8 @@ class AlarmDaemon():
         input('Press enter to stop')
         self.play_athan.stop()
         if athan_name == 'Isha':
-            pass
+            self.settingsmgr.calcTimes()
+            self.schedule_alarm(self.settingsmgr.times)
 
     # TODO use PrayTims class to get Athan names
     def schedule_alarm(self, times):
@@ -64,6 +66,7 @@ class AlarmDaemon():
                 self.next_alarm = self.scheduler.enterabs(
                         athan_time.timestamp(), 1, self.alarm_action, argument={p})
                 print('Athan for ', p, ' set at:', athan_time)
+                self.start_alarm('activate')
                 break
 
     def start_alarm(self, action):

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from settings import SettingsManager
+from core.settings import SettingsManager
 
 import os
 import threading

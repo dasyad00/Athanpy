@@ -1,7 +1,7 @@
 import datetime
 import configparser
 
-from praytimes import PrayTimes
+from core.praytimes import PrayTimes
 
 class SettingsManager():
     def __init__(self):

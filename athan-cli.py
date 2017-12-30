@@ -2,8 +2,8 @@
 
 # Doha, Qatar - 25.3, 51.5, 3
 from datetime import date
-from praytimes import PrayTimes
-from settings import SettingsManager
+from core.praytimes import PrayTimes
+from core.settings import SettingsManager
 
 import configparser
 

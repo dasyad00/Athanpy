@@ -12,7 +12,6 @@ import configparser
 
 from core.settings import SettingsManager
 from core.alarmdaemon import AlarmDaemon
-#from .core.settings import SettingsManager
 
 settings = SettingsManager()
 
@@ -63,12 +62,21 @@ class MainWindow(QtWidgets.QMainWindow):
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.setObjectName("statusbar")
         self.setStatusBar(self.statusbar)
+
         self.actionSettings = QtWidgets.QAction(self)
         self.actionSettings.setObjectName("actionSettings")
+        self.actionSettings.setText("Settings")
+        self.actionSettings.triggered.connect(self.show_settings)
+
         self.actionQuit = QtWidgets.QAction(self)
         self.actionQuit.setObjectName("actionQuit")
+        self.actionQuit.setText("Quit")
+        self.actionQuit.triggered.connect(QtWidgets.qApp.quit)
+
         self.menuFile.addAction(self.actionSettings)
         self.menuFile.addAction(self.actionQuit)
+        self.menuFile.setTitle("File")
+
         self.menubar.addAction(self.menuFile.menuAction())
 
         # QSystemTrayIcon

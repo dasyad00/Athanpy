@@ -9,11 +9,13 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class SettingsWindow(object):
-    def setupUi(self, SettingsWindow):
-        SettingsWindow.setObjectName("SettingsWindow")
-        SettingsWindow.resize(360, 240)
-        self.centralwidget = QtWidgets.QWidget(SettingsWindow)
+class SettingsWindow(QtWidgets.QMainWindow):
+    def __init__(self):
+        QtWidgets.QMainWindow.__init__(self)
+        
+        self.setMinimumSize(QtCore.QSize(360,240))
+        self.setObjectName("SettingsWindow")
+        self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.formLayoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.formLayoutWidget.setGeometry(QtCore.QRect(0, 0, 351, 191))
@@ -22,6 +24,7 @@ class SettingsWindow(object):
         self.formLayout.setContentsMargins(0, 0, 0, 0)
         self.formLayout.setObjectName("formLayout")
 
+        # Latitude
         self.lbl_lat = QtWidgets.QLabel(self.formLayoutWidget)
         self.lbl_lat.setObjectName("lbl_lat")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.lbl_lat)
@@ -29,6 +32,7 @@ class SettingsWindow(object):
         self.txt_lat.setObjectName("txt_lat")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.txt_lat)
 
+        # Latitude
         self.lbl_lon = QtWidgets.QLabel(self.formLayoutWidget)
         self.lbl_lon.setObjectName("lbl_lon")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lbl_lon)
@@ -36,6 +40,7 @@ class SettingsWindow(object):
         self.txt_lon.setObjectName("txt_lon")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.txt_lon)
 
+        # Longitude
         self.lbl_tz = QtWidgets.QLabel(self.formLayoutWidget)
         self.lbl_tz.setObjectName("lbl_tz")
         self.formLayout.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.lbl_tz)
@@ -43,6 +48,7 @@ class SettingsWindow(object):
         self.txt_tz.setObjectName("txt_tz")
         self.formLayout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.txt_tz)
 
+        # Calclation methods
         self.lbl_calc = QtWidgets.QLabel(self.formLayoutWidget)
         self.lbl_calc.setObjectName("lbl_calc")
         self.formLayout.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.lbl_calc)
@@ -50,38 +56,25 @@ class SettingsWindow(object):
         self.box_calc.setObjectName("box_calc")
         self.formLayout.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.box_calc)
 
+        # Apply button
         self.pushButton = QtWidgets.QPushButton(self.formLayoutWidget)
         self.pushButton.setObjectName("pushButton")
         self.formLayout.setWidget(5, QtWidgets.QFormLayout.SpanningRole, self.pushButton)
 
-        SettingsWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(SettingsWindow)
+        self.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(self)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 360, 20))
         self.menubar.setObjectName("menubar")
-        SettingsWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(SettingsWindow)
+        self.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.setObjectName("statusbar")
-        SettingsWindow.setStatusBar(self.statusbar)
+        self.setStatusBar(self.statusbar)
 
-        self.retranslateUi(SettingsWindow)
-        QtCore.QMetaObject.connectSlotsByName(SettingsWindow)
-
-    def retranslateUi(self, SettingsWindow):
         _translate = QtCore.QCoreApplication.translate
-        SettingsWindow.setWindowTitle(_translate("SettingsWindow", "Settings"))
+        self.setWindowTitle(_translate("SettingsWindow", "Settings"))
         self.lbl_lat.setText(_translate("SettingsWindow", "Latitude"))
         self.lbl_lon.setText(_translate("SettingsWindow", "Longitude"))
         self.lbl_tz.setText(_translate("SettingsWindow", "Timezone"))
         self.lbl_calc.setText(_translate("SettingsWindow", "Calculation Method"))
         self.pushButton.setText(_translate("SettingsWindow", "Apply"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    SettingsWindow = QtWidgets.QMainWindow()
-    ui = SettingsWindow()
-    ui.setupUi(SettingsWindow)
-    SettingsWindow.show()
-    sys.exit(app.exec_())
-
+        QtCore.QMetaObject.connectSlotsByName(self)

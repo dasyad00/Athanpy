@@ -12,6 +12,7 @@ import configparser
 
 from core.settings import SettingsManager
 from core.alarmdaemon import AlarmDaemon
+from windows.SettingsWindow import SettingsWindow
 
 settings = SettingsManager()
 
@@ -96,6 +97,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tray_icon.setContextMenu(tray_menu)
         self.tray_icon.show()
 
+        # Settings window
+        self.settingswindow = SettingsWindow()
+
     def closeEvent(self, event):
         if self.minimize_to_tray:
             event.ignore()
@@ -120,77 +124,7 @@ class MainWindow(QtWidgets.QMainWindow):
         return output
 
     def show_settings(self):
-        pass
-        
-#class MainWindow(object):
-#    def setupUi(self, MainWindow):
-#        MainWindow.setObjectName("MainWindow")
-#        MainWindow.resize(480, 320)
-#        self.centralwidget = QtWidgets.QWidget(MainWindow)
-#        self.centralwidget.setObjectName("centralwidget")
-#        self.gridLayout_2 = QtWidgets.QGridLayout(self.centralwidget)
-#        self.gridLayout_2.setObjectName("gridLayout_2")
-#        self.gridLayout = QtWidgets.QGridLayout()
-#        self.gridLayout.setObjectName("gridLayout")
-#
-#        self.txt_times = QtWidgets.QLabel(self.centralwidget)
-#        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
-#        sizePolicy.setHorizontalStretch(0)
-#        sizePolicy.setVerticalStretch(0)
-#        sizePolicy.setHeightForWidth(self.txt_times.sizePolicy().hasHeightForWidth())
-#        self.txt_times.setSizePolicy(sizePolicy)
-#        self.txt_times.setAlignment(QtCore.Qt.AlignCenter)
-#        self.txt_times.setObjectName("txt_times")
-#        self.gridLayout.addWidget(self.txt_times, 1, 0, 1, 1)
-#
-#        self.txt_date = QtWidgets.QLabel(self.centralwidget)
-#        self.txt_date.setObjectName("txt_date")
-#        self.gridLayout.addWidget(self.txt_date, 0, 0, 1, 1)
-#        self.gridLayout_2.addLayout(self.gridLayout, 0, 0, 1, 1)
-#
-#        MainWindow.setCentralWidget(self.centralwidget)
-#        self.menubar = QtWidgets.QMenuBar(MainWindow)
-#        self.menubar.setGeometry(QtCore.QRect(0, 0, 480, 20))
-#        self.menubar.setObjectName("menubar")
-#        self.menuFile = QtWidgets.QMenu(self.menubar)
-#        self.menuFile.setObjectName("menuFile")
-#        MainWindow.setMenuBar(self.menubar)
-#        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-#        self.statusbar.setObjectName("statusbar")
-#        MainWindow.setStatusBar(self.statusbar)
-#        self.actionSettings = QtWidgets.QAction(MainWindow)
-#        self.actionSettings.setObjectName("actionSettings")
-#        self.actionQuit = QtWidgets.QAction(MainWindow)
-#        self.actionQuit.setObjectName("actionQuit")
-#        self.menuFile.addAction(self.actionSettings)
-#        self.menuFile.addAction(self.actionQuit)
-#        self.menubar.addAction(self.menuFile.menuAction())
-#
-#        self.retranslateUi(MainWindow)
-#        QtCore.QMetaObject.connectSlotsByName(MainWindow)
-#
-#    def retranslateUi(self, MainWindow):
-#        _translate = QtCore.QCoreApplication.translate
-#        MainWindow.setWindowTitle(_translate("MainWindow", "AthanPy"))
-#        self.txt_times.setText(_translate("MainWindow", "TextLabel"))
-#        self.txt_date.setText(_translate("MainWindow", "TextLabel"))
-##        self.txt_date.setText(self.get_prayertime_text())
-#        self.menuFile.setTitle(_translate("MainWindow", "File"))
-#        self.actionSettings.setText(_translate("MainWindow", "Settings"))
-#        self.actionQuit.setText(_translate("MainWindow", "Quit"))
-#
-    #def get_prayertime_text(self):
-    #    settings.refreshVariables(self.showSettings)
-    #    settings.calcTimes()
-
-    #    times = settings.times
-    #    output = ''
-    #    for i in ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Midnight']:
-    #        output += (i + ': ' + times[i.lower()] + "\n")
-    #    self.alarm = AlarmDaemon()
-    #    self.alarm.schedule_alarm(times)
-    #    return output
-
+        self.settingswindow.show()
 
 def main():
     import sys
@@ -199,13 +133,6 @@ def main():
     mw = MainWindow()
     mw.show()
     sys.exit(app.exec())
-
-    #app = QtWidgets.QApplication(sys.argv)
-    #qMainWindow = QtWidgets.QMainWindow()
-    #ui = MainWindow()
-    #ui.setupUi(qMainWindow)
-    #qMainWindow.show()
-    #sys.exit(app.exec_())
 
 if __name__ == "__main__":
     main()

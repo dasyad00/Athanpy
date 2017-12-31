@@ -8,6 +8,14 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import configparser
+
+from core.settings import SettingsManager
+from core.praytimes import PrayTimes
+
+cfg = configparser.ConfigParser()
+prayTimes = PrayTimes()
+#settingsmgr = SettingsManager()
 
 class SettingsWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -27,39 +35,52 @@ class SettingsWindow(QtWidgets.QMainWindow):
         # Latitude
         self.lbl_lat = QtWidgets.QLabel(self.formLayoutWidget)
         self.lbl_lat.setObjectName("lbl_lat")
-        self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.lbl_lat)
         self.txt_lat = QtWidgets.QLineEdit(self.formLayoutWidget)
         self.txt_lat.setObjectName("txt_lat")
+        self.txt_lat.setText(str(SettingsManager.lat))
+        #self.txt_lat.textChanged.connect(self.apply_settings)
+        self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.lbl_lat)
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.txt_lat)
 
         # Latitude
         self.lbl_lon = QtWidgets.QLabel(self.formLayoutWidget)
         self.lbl_lon.setObjectName("lbl_lon")
-        self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lbl_lon)
         self.txt_lon = QtWidgets.QLineEdit(self.formLayoutWidget)
         self.txt_lon.setObjectName("txt_lon")
+        self.txt_lon.setText(str(SettingsManager.lon))
+        #self.txt_lon.textChanged.connect(self.apply_settings)
+        self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lbl_lon)
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.txt_lon)
 
         # Longitude
         self.lbl_tz = QtWidgets.QLabel(self.formLayoutWidget)
         self.lbl_tz.setObjectName("lbl_tz")
-        self.formLayout.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.lbl_tz)
         self.txt_tz = QtWidgets.QLineEdit(self.formLayoutWidget)
         self.txt_tz.setObjectName("txt_tz")
+        self.txt_tz.setText(str(SettingsManager.tz))
+        #self.txt_tz.textChanged.connect(self.apply_settings)
+        self.formLayout.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.lbl_tz)
         self.formLayout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.txt_tz)
 
         # Calclation methods
         self.lbl_calc = QtWidgets.QLabel(self.formLayoutWidget)
         self.lbl_calc.setObjectName("lbl_calc")
-        self.formLayout.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.lbl_calc)
         self.box_calc = QtWidgets.QComboBox(self.formLayoutWidget)
         self.box_calc.setObjectName("box_calc")
+        calcCodes = prayTimes.methods
+        for code in calcCodes:
+            self.box_calc.addItem(code)
+        if (SettingsManager.calcCode != ''):
+            self.box_calc.setCurrentText(SettingsManager.calcCode)
+        #self.box_calc.currentIndexChanged.connect(self.apply_settings)
+        self.formLayout.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.lbl_calc)
         self.formLayout.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.box_calc)
 
         # Apply button
-        self.pushButton = QtWidgets.QPushButton(self.formLayoutWidget)
-        self.pushButton.setObjectName("pushButton")
-        self.formLayout.setWidget(5, QtWidgets.QFormLayout.SpanningRole, self.pushButton)
+        self.btn_apply = QtWidgets.QPushButton(self.formLayoutWidget)
+        self.btn_apply.setObjectName("btn_apply")
+        self.btn_apply.clicked.connect(self.apply_settings)
+        self.formLayout.setWidget(5, QtWidgets.QFormLayout.SpanningRole, self.btn_apply)
 
         self.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(self)
@@ -76,5 +97,15 @@ class SettingsWindow(QtWidgets.QMainWindow):
         self.lbl_lon.setText(_translate("SettingsWindow", "Longitude"))
         self.lbl_tz.setText(_translate("SettingsWindow", "Timezone"))
         self.lbl_calc.setText(_translate("SettingsWindow", "Calculation Method"))
-        self.pushButton.setText(_translate("SettingsWindow", "Apply"))
+        self.btn_apply.setText(_translate("SettingsWindow", "Apply"))
         QtCore.QMetaObject.connectSlotsByName(self)
+
+    def apply_settings(self):
+        if (cfg.sections() == []):
+            cfg['Location'] = {}
+        cfg['Location']['latitude'] = self.txt_lat.text()
+        cfg['Location']['longitude'] = self.txt_lon.text()
+        cfg['Location']['timezone'] = self.txt_tz.text()
+        cfg['Location']['calcCode'] = self.box_calc.currentText()
+        with open('athanpy.cfg', 'w') as cfgfile:
+            cfg.write(cfgfile)

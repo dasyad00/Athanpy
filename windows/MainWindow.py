@@ -14,8 +14,6 @@ from core.settings import SettingsManager
 from core.alarmdaemon import AlarmDaemon
 from windows.SettingsWindow import SettingsWindow
 
-settings = SettingsManager()
-
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
@@ -107,15 +105,15 @@ class MainWindow(QtWidgets.QMainWindow):
             self.tray_icon.showMessage(
                 "Tray Program",
                 "Application was minimized to tray",
-                QSystemTrayIcon.Information,
+                QtWidgets.QSystemTrayIcon.Information,
                 2000
             )
 
     def get_prayertime_text(self):
-        settings.refreshVariables(self.show_settings)
-        settings.calcTimes()
+        SettingsManager.refreshVariables(self.show_settings)
+        SettingsManager.calcTimes()
 
-        times = settings.times
+        times = SettingsManager.times
         output = ''
         for i in ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Midnight']:
             output += (i + ': ' + times[i.lower()] + "\n")

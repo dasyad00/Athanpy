@@ -3,30 +3,31 @@ import configparser
 
 from core.praytimes import PrayTimes
 
-class SettingsManager():
-    def __init__(self):
-        self.prayTimes = PrayTimes()
+prayTimes = PrayTimes()
 
-    def refreshVariables(self, setupfunction):
+class SettingsManager():
+    lat = 0
+    lon = 0
+    tz = 0
+    calcCode = ''
+    times = {}
+
+    def refreshVariables(setupfunction):
         cfg = configparser.ConfigParser()
         if ( cfg.read('athanpy.cfg') != [] ):
             pass
         else:
-            self.lat = 0
-            self.lon = 0
-            self.tz  = 0
-            self.calcCode  = ''
             setupfunction()
             cfg.read('athanpy.cfg')
         
-        self.lat = float(cfg['Location'].get('latitude'))
-        self.lon = float(cfg['Location'].get('longitude'))
-        self.tz  = float(cfg['Location'].get('timezone'))
-        self.calcCode  = cfg['Location'].get('calcCode')
+        SettingsManager.lat = float(cfg['Location'].get('latitude'))
+        SettingsManager.lon = float(cfg['Location'].get('longitude'))
+        SettingsManager.tz  = float(cfg['Location'].get('timezone'))
+        SettingsManager.calcCode  = cfg['Location'].get('calcCode')
 
-    def calcTimes(self):
-        self.prayTimes.setMethod(self.calcCode)
+    def calcTimes():
+        prayTimes.setMethod(SettingsManager.calcCode)
         # getTimes(self, date, coords, timezone)
-        self.times = self.prayTimes.getTimes(datetime.date.today(),
-                (self.lat, self.lon), self.tz)
+        SettingsManager.times = prayTimes.getTimes(datetime.date.today(),
+                (SettingsManager.lat, SettingsManager.lon), SettingsManager.tz)
 

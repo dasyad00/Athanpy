@@ -25,9 +25,12 @@ class SettingsManager():
         SettingsManager.tz  = float(cfg['Location'].get('timezone'))
         SettingsManager.calcCode  = cfg['Location'].get('calcCode')
 
-    def calcTimes():
+    def calcTimes(nextDay=False):
         prayTimes.setMethod(SettingsManager.calcCode)
         # getTimes(self, date, coords, timezone)
+        time = datetime.date.today()
+        if nextDay:
+            time = time + datetime.timedelta(days=1)
         SettingsManager.times = prayTimes.getTimes(datetime.date.today(),
                 (SettingsManager.lat, SettingsManager.lon), SettingsManager.tz)
 

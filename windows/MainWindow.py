@@ -19,6 +19,8 @@ class MainWindow(QtWidgets.QMainWindow):
         QtWidgets.QMainWindow.__init__(self)
 
         self.minimize_to_tray = True
+        self.alarm = AlarmDaemon()
+
         # Window definitions
         self.setMinimumSize(QtCore.QSize(480,320))
         self.setWindowTitle("AthanPy")
@@ -83,15 +85,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tray_icon.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_ComputerIcon))
 
         show_action = QtWidgets.QAction("Show", self)
-        quit_action = QtWidgets.QAction("Quit", self)
         hide_action = QtWidgets.QAction("Hide", self)
+        stopathan_action = QtWidgets.QAction("Stop athan", self)
+        quit_action = QtWidgets.QAction("Quit", self)
         show_action.triggered.connect(self.show)
         hide_action.triggered.connect(self.hide)
-        quit_action.triggered.connect(QtWidgets.qApp.quit)
+        stopathan_action.triggered.connect(self.alarm.stop_sound)
+        quit_action.triggered.connect(QtCore.QCoreApplication.quit)
         tray_menu = QtWidgets.QMenu()
         tray_menu.addAction(show_action)
-        tray_menu.addAction(quit_action)
         tray_menu.addAction(hide_action)
+        tray_menu.addSeparator()
+        tray_menu.addAction(stopathan_action)
+        tray_menu.addSeparator()
+        tray_menu.addAction(quit_action)
         self.tray_icon.setContextMenu(tray_menu)
         self.tray_icon.show()
 
@@ -100,6 +107,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def closeEvent(self, event):
         if self.minimize_to_tray:
+            print('triggered 1')
             event.ignore()
             self.hide()
             self.tray_icon.showMessage(
@@ -114,11 +122,15 @@ class MainWindow(QtWidgets.QMainWindow):
         SettingsManager.calcTimes()
 
         times = SettingsManager.times
+        # For testing purposes, comment/delete when not in use
+#        times['dhuhr'] = '07:12'
+#        times['asr'] = '07:13'
+#        times['isha'] = '16:20'
         output = ''
         for i in ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Midnight']:
             output += (i + ': ' + times[i.lower()] + "\n")
-        self.alarm = AlarmDaemon()
         self.alarm.schedule_alarm(times)
+        self.alarm.start()
         return output
 
     def show_settings(self):

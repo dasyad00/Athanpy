@@ -8,53 +8,47 @@ import datetime
 
 import simpleaudio as sa
 
-from gi.repository import Gtk as gtk
-from gi.repository import AppIndicator3 as appindicator
-import signal
+from PyQt5.QtCore import QThread
+from PyQt5.QtWidgets import QMessageBox
 
-APPINDICATOR_ID = 'ATHANPY_INDICATOR'
-
-class AlarmDaemon():
+class AlarmDaemon(QThread):
     def __init__(self):
+        QThread.__init__(self)
         self.scheduler = sched.scheduler(time.time, time.sleep)
-        self.settingsmgr = SettingsManager()
+#        self.settingsmgr = SettingsManager()
+        self.play_athan = None
 
-    def main(self):
-        indicator = appindicator.Indicator.new(APPINDICATOR_ID, gtk.STOCK_INFO, appindicator.IndicatorCategory.SYSTEM_SERVICES)
-        indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
-        indicator.set_menu(self.build_menu())
-        signal.signal(signal.SIGINT, signal.SIG_DFL)
-        gtk.main()
+    def __del__(self):
+        self.wait()
 
-    def build_menu(self):
-        menu = gtk.Menu()
-        item_start = gtk.MenuItem('Start')
-        item_start.connect('activate', self.start_alarm)
-        item_stop = gtk.MenuItem('Stop')
-        item_stop.connect('activate', self.stop_alarm)
-        item_quit = gtk.MenuItem('Quit')
-        item_quit.connect('activate', quit)
-        menu.append(item_start)
-        menu.append(item_stop)
-        menu.append(item_quit)
-        menu.show_all()
-        return menu
+    def run(self):
+        self.scheduler.run()
 
     def alarm_action(self, athan_name):
         athan_sound = sa.WaveObject.from_wave_file('audio/athan_makkah.wav')
         self.play_athan = athan_sound.play()
-        print('Time for ', athan_name, '!')
-        input('Press enter to stop')
-        self.play_athan.stop()
+        message = 'Time for' + athan_name + '!'
+        print(message)
         if athan_name == 'Isha':
-            self.settingsmgr.calcTimes()
-            self.schedule_alarm(self.settingsmgr.times)
+            print('calculating times for next day')
+            SettingsManager.calcTimes(True)
+        self.schedule_alarm(SettingsManager.times)
+        # TODO show pop up message/notification
+        #popUp = QMessageBox()
+        #popUp.setIcon(QMessageBox.Information)
+        #popUp.setText(str(message))
+        #popUp.setWindowTitle("AthanPy")
+        #popUp.setStandardButtons(QMessageBox.Close)
+        #popUp.buttonClicked.connect(self.stop_sound)
+        #popUp.exec_()
+        #input('Press enter to stop')
+        #self.stop_sound()
 
     # TODO use PrayTims class to get Athan names
-    def schedule_alarm(self, times):
+    def schedule_alarm(self, times, nextDay=True):
 #        now = time.strftime("%H:%M")
         now = datetime.datetime.now()
-        for p in ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Midnight']:
+        for p in ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']:
             athan_time = datetime.datetime.today()
             athan_time = athan_time.replace(
                 hour=int(times[p.lower()][0:2]),
@@ -66,20 +60,23 @@ class AlarmDaemon():
                 self.next_alarm = self.scheduler.enterabs(
                         athan_time.timestamp(), 1, self.alarm_action, argument={p})
                 print('Athan for ', p, ' set at:', athan_time)
-                self.start_alarm('activate')
                 break
 
-    def start_alarm(self, action):
-        daemon = threading.Thread(target=self.scheduler.run)
-        daemon.start()
+    def stop_sound(self):
+        if self.play_athan is not None:
+            if self.play_athan.is_playing:
+                self.play_athan.stop()
+                return True
+        print("It's not playing")
+        return False
 
     def stop_alarm(self, action):
-        self.play_athan.stop()
         self.scheduler.cancel(self.next_alarm)
+        print(self.scheduler.empty)
         print('alarm stopped')
 
-    def quit(source):
-        gtk.main_quit()
+#    def quit(source):
+#        gtk.main_quit()
 
 #print('making daemon')
 #alarm = AlarmDaemon()

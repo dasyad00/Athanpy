@@ -425,6 +425,7 @@ if __name__ == "__main__":
     print('Prayer Times for today in Waterloo/Canada\n'+ ('='* 41))
     prayTimes.setMethod('Makkah')
     times = prayTimes.getTimes(date.today(), (43, -80), -5);
+    print(times)
     for i in['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Midnight']:
         print(i+ ': '+ times[i.lower()])
 

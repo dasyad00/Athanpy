@@ -12,11 +12,12 @@ from PyQt5.QtCore import QThread
 from PyQt5.QtWidgets import QMessageBox
 
 class AlarmDaemon(QThread):
-    def __init__(self):
+    def __init__(self, mainReference):
         QThread.__init__(self)
         self.scheduler = sched.scheduler(time.time, time.sleep)
 #        self.settingsmgr = SettingsManager()
         self.play_athan = None
+        self.mainW = mainReference
 
     def __del__(self):
         self.wait()
@@ -34,6 +35,10 @@ class AlarmDaemon(QThread):
             SettingsManager.calcTimes(True)
         self.schedule_alarm(SettingsManager.times)
         # TODO show pop up message/notification
+        popUp = QMessageBox.information(self.mainW,
+                "AthanPy", message, QMessageBox.Ok)
+        if popUp == QMessageBox.Ok:
+            self.stop_sound()
         #popUp = QMessageBox()
         #popUp.setIcon(QMessageBox.Information)
         #popUp.setText(str(message))

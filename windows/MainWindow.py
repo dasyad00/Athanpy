@@ -19,7 +19,7 @@ class MainWindow(QtWidgets.QMainWindow):
         QtWidgets.QMainWindow.__init__(self)
 
         self.minimize_to_tray = True
-        self.alarm = AlarmDaemon()
+        self.alarm = AlarmDaemon(self)
 
         # Window definitions
         self.setMinimumSize(QtCore.QSize(480,320))
@@ -123,8 +123,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         times = SettingsManager.times
         # For testing purposes, comment/delete when not in use
-#        times['dhuhr'] = '07:12'
-#        times['asr'] = '07:13'
+        times['dhuhr'] = '08:02'
+        times['asr'] = '08:03'
 #        times['isha'] = '16:20'
         output = ''
         for i in ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Midnight']:

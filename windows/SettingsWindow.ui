@@ -7,84 +7,363 @@
     <x>0</x>
     <y>0</y>
     <width>360</width>
-    <height>240</height>
+    <height>480</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="formLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>351</width>
-      <height>191</height>
-     </rect>
-    </property>
-    <layout class="QFormLayout" name="formLayout">
-     <item row="1" column="0">
-      <widget class="QLabel" name="lbl_lat">
-       <property name="text">
-        <string>Latitude</string>
-       </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="3" column="0">
+     <widget class="QPushButton" name="btn_apply">
+      <property name="text">
+       <string>Apply</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="tab_location">
+       <attribute name="title">
+        <string>Location</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <layout class="QFormLayout" name="formLayout">
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbl_lat">
+            <property name="text">
+             <string>Latitude</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="txt_lat"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="lbl_lon">
+            <property name="text">
+             <string>Longitude</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="txt_lon"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="lbl_tz">
+            <property name="text">
+             <string>Timezone</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="txt_tz"/>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="lbl_calc">
+            <property name="text">
+             <string>Calculation Method</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QComboBox" name="combo_calc"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="txt_lat"/>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="lbl_lon">
-       <property name="text">
-        <string>Longitude</string>
-       </property>
+      <widget class="QWidget" name="tab_reminders">
+       <attribute name="title">
+        <string>Reminders</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>304</width>
+             <height>598</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="QGroupBox" name="group_athan">
+              <property name="title">
+               <string>Athan</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_3">
+               <item row="1" column="1">
+                <widget class="QCheckBox" name="check_athan_maghrib">
+                 <property name="text">
+                  <string>Maghrib</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QCheckBox" name="check_athan_fajr">
+                 <property name="text">
+                  <string>Fajr</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QCheckBox" name="check_athan_dhuhr">
+                 <property name="text">
+                  <string>Dhuhr</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0" colspan="2">
+                <widget class="QLabel" name="desc_athan_method">
+                 <property name="text">
+                  <string>Method of reminder</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0" colspan="2">
+                <widget class="QLabel" name="desc_athan">
+                 <property name="text">
+                  <string>Enable/disable athan reminder</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QCheckBox" name="check_athan_asr">
+                 <property name="text">
+                  <string>Asr</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QCheckBox" name="check_athan_isha">
+                 <property name="text">
+                  <string>Isha</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0" colspan="2">
+                <widget class="QCheckBox" name="check_athan_dialog">
+                 <property name="text">
+                  <string>Pop up dialog</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0" colspan="2">
+                <widget class="QCheckBox" name="check_athan_notification">
+                 <property name="text">
+                  <string>Pop up notification</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="group_iqomah">
+              <property name="title">
+               <string>Iqomah</string>
+              </property>
+              <property name="flat">
+               <bool>false</bool>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_5">
+               <item row="3" column="0">
+                <widget class="QCheckBox" name="check_iqomah_dhuhr">
+                 <property name="text">
+                  <string>Dhuhr</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QCheckBox" name="check_iqomah_fajr">
+                 <property name="text">
+                  <string>Fajr</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QCheckBox" name="check_iqomah_asr">
+                 <property name="text">
+                  <string>Asr</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QCheckBox" name="check_iqomah_maghrib">
+                 <property name="text">
+                  <string>Maghrib</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="0" colspan="2">
+                <widget class="QCheckBox" name="check_iqomah_notification">
+                 <property name="text">
+                  <string>Pop up notification</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0" colspan="2">
+                <widget class="QLabel" name="desc_iqomah">
+                 <property name="text">
+                  <string>Enable/disable iqomah reminder</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLineEdit" name="txt_iqomah_asr">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QLineEdit" name="txt_iqomah_maghrib">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QCheckBox" name="check_iqomah_dialog">
+                 <property name="text">
+                  <string>Pop up dialog</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLineEdit" name="txt_iqomah_fajr">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="readOnly">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLineEdit" name="txt_iqomah_dhuhr">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLabel" name="lbl_timeafterathan">
+                 <property name="text">
+                  <string>Time after Athan</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QLineEdit" name="txt_iqomah_isha">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QCheckBox" name="check_iqomah_isha">
+                 <property name="text">
+                  <string>Isha</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="0">
+                <widget class="QLabel" name="desc_iqomah_method">
+                 <property name="text">
+                  <string>Method of reminder</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="group_custom">
+              <property name="title">
+               <string>Custom</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_6">
+               <item row="0" column="0">
+                <widget class="QLabel" name="desc_custom">
+                 <property name="text">
+                  <string>Coming Soon!</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
       </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="txt_lon"/>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="lbl_tz">
-       <property name="text">
-        <string>Timezone</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="txt_tz"/>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="lbl_calc">
-       <property name="text">
-        <string>Calculation Method</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QComboBox" name="box_calc"/>
-     </item>
-     <item row="5" column="1">
-      <widget class="QPushButton" name="btn_apply">
-       <property name="text">
-        <string>Apply</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
+     </widget>
+    </item>
+   </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>360</width>
-     <height>20</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

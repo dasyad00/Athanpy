@@ -20,6 +20,7 @@ prayTimes = PrayTimes()
 class SettingsWindow(QtWidgets.QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
+        _translate = QtCore.QCoreApplication.translate
         
         self.setMinimumSize(QtCore.QSize(360,240))
         self.setObjectName("SettingsWindow")
@@ -96,6 +97,13 @@ class SettingsWindow(QtWidgets.QMainWindow):
         
         self.tabWidget.addTab(self.tab_location, "")
 
+        self.setWindowTitle(_translate("SettingsWindow", "Settings"))
+        self.lbl_lat.setText(_translate("SettingsWindow", "Latitude"))
+        self.lbl_lon.setText(_translate("SettingsWindow", "Longitude"))
+        self.lbl_tz.setText(_translate("SettingsWindow", "Timezone"))
+        self.lbl_calc.setText(_translate("SettingsWindow", "Calculation Method"))
+        self.btn_apply.setText(_translate("SettingsWindow", "Apply"))
+
         ###--- Reminders ---###
         self.tab_reminders = QtWidgets.QWidget()
         self.tab_reminders.setObjectName("tab_reminders")
@@ -116,23 +124,20 @@ class SettingsWindow(QtWidgets.QMainWindow):
         self.group_athan_layout = QtWidgets.QGridLayout(self.group_athan)
         self.group_athan_layout.setObjectName("group_athan_layout")
 
-        self.check_athan_fajr = QtWidgets.QCheckBox(self.group_athan)
-        self.check_athan_fajr.setObjectName("check_athan_fajr")
-        self.check_athan_dhuhr = QtWidgets.QCheckBox(self.group_athan)
-        self.check_athan_dhuhr.setObjectName("check_athan_dhuhr")
-        self.check_athan_asr = QtWidgets.QCheckBox(self.group_athan)
-        self.check_athan_asr.setObjectName("check_athan_asr")
-        self.check_athan_maghrib = QtWidgets.QCheckBox(self.group_athan)
-        self.check_athan_maghrib.setObjectName("check_athan_maghrib")
-        self.check_athan_isha = QtWidgets.QCheckBox(self.group_athan)
-        self.check_athan_isha.setObjectName("check_athan_isha")
-
-        self.group_athan_layout.addWidget(self.check_athan_fajr, 1, 0, 1, 1)
-        self.group_athan_layout.addWidget(self.check_athan_dhuhr, 2, 0, 1, 1)
-        self.group_athan_layout.addWidget(self.check_athan_asr, 3, 0, 1, 1)
-        self.group_athan_layout.addWidget(self.check_athan_maghrib, 1, 1, 1, 1)
-        self.group_athan_layout.addWidget(self.check_athan_isha, 2, 1, 1, 1)
-
+        # TODO https://stackoverflow.com/questions/38437347/qcheckbox-state-change-pyqt4
+        self.check_athan = {}
+        y = 1
+        x = 0
+        for name in ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']:
+            self.check_athan[name.lower()] = QtWidgets.QCheckBox(self.group_athan)
+            self.check_athan[name.lower()].setObjectName("check_athan_" + name.lower())
+            self.check_athan[name.lower()].setText(_translate("SettingsWindow", name))
+            self.group_athan_layout.addWidget(self.check_athan[name.lower()], y, x, 1, 1)
+            if name == 'Asr':
+                y = 1
+                x = 1
+            else:
+                y += 1
         self.desc_athan_method = QtWidgets.QLabel(self.group_athan)
         self.desc_athan_method.setObjectName("desc_athan_method")
         self.desc_athan = QtWidgets.QLabel(self.group_athan)
@@ -157,61 +162,37 @@ class SettingsWindow(QtWidgets.QMainWindow):
         self.group_iqomah_layout = QtWidgets.QGridLayout(self.group_iqomah)
         self.group_iqomah_layout.setObjectName("group_iqomah_layout")
 
-        self.check_iqomah_fajr = QtWidgets.QCheckBox(self.group_iqomah)
-        self.check_iqomah_fajr.setObjectName("check_iqomah_fajr")
-        self.check_iqomah_dhuhr = QtWidgets.QCheckBox(self.group_iqomah)
-        self.check_iqomah_dhuhr.setObjectName("check_iqomah_dhuhr")
-        self.check_iqomah_asr = QtWidgets.QCheckBox(self.group_iqomah)
-        self.check_iqomah_asr.setObjectName("check_iqomah_asr")
-        self.check_iqomah_maghrib = QtWidgets.QCheckBox(self.group_iqomah)
-        self.check_iqomah_maghrib.setObjectName("check_iqomah_maghrib")
-        self.check_iqomah_isha = QtWidgets.QCheckBox(self.group_iqomah)
-        self.check_iqomah_isha.setObjectName("check_iqomah_isha")
+        valid_iqomah = QtGui.QIntValidator(1, 60)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        self.check_iqomah = {}
+        self.text_iqomah = {}
+        y = 2
+        for name in ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']:
+            self.check_iqomah[name.lower()] = QtWidgets.QCheckBox(self.group_iqomah)
+            self.check_iqomah[name.lower()].setObjectName("check_iqomah_" + name.lower())
+            self.check_iqomah[name.lower()].setText(_translate("SettingsWindow", name))
+
+            self.text_iqomah[name.lower()] = QtWidgets.QLineEdit(self.group_iqomah)
+            self.text_iqomah[name.lower()].setSizePolicy(sizePolicy)
+            self.text_iqomah[name.lower()].setBaseSize(QtCore.QSize(0, 0))
+            self.text_iqomah[name.lower()].setReadOnly(False)
+            self.text_iqomah[name.lower()].setObjectName("txt_iqomah_" + name.lower())
+            self.text_iqomah[name.lower()].setValidator(valid_iqomah)
+            self.text_iqomah[name.lower()].setDisabled(not self.check_iqomah[name.lower()].isChecked())
+
+            self.check_iqomah[name.lower()].toggled.connect(
+                    lambda state, n=name.lower(): self.text_iqomah[n].setDisabled(not state))
+            self.group_iqomah_layout.addWidget(self.check_iqomah[name.lower()], y, 0, 1, 1)
+            self.group_iqomah_layout.addWidget(self.text_iqomah[name.lower()], y, 1, 1, 1)
+            y += 1
+
         self.check_iqomah_notification = QtWidgets.QCheckBox(self.group_iqomah)
         self.check_iqomah_notification.setObjectName("check_iqomah_notification")
         self.desc_iqomah = QtWidgets.QLabel(self.group_iqomah)
         self.desc_iqomah.setObjectName("desc_iqomah")
-
         self.group_iqomah_layout.addWidget(self.desc_iqomah, 0, 0, 1, 2)
-        self.group_iqomah_layout.addWidget(self.check_iqomah_fajr, 2, 0, 1, 1)
-        self.group_iqomah_layout.addWidget(self.check_iqomah_dhuhr, 3, 0, 1, 1)
-        self.group_iqomah_layout.addWidget(self.check_iqomah_asr, 4, 0, 1, 1)
-        self.group_iqomah_layout.addWidget(self.check_iqomah_maghrib, 5, 0, 1, 1)
-        self.group_iqomah_layout.addWidget(self.check_iqomah_isha, 7, 0, 1, 1)
-
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-
-        valid_iqomah = QtGui.QIntValidator(1, 60)
-        self.txt_iqomah_fajr = QtWidgets.QLineEdit(self.group_iqomah)
-        self.txt_iqomah_fajr.setSizePolicy(sizePolicy)
-        self.txt_iqomah_fajr.setBaseSize(QtCore.QSize(0, 0))
-        self.txt_iqomah_fajr.setReadOnly(False)
-        self.txt_iqomah_fajr.setObjectName("txt_iqomah_fajr")
-        self.txt_iqomah_fajr.setValidator(valid_iqomah)
-        self.txt_iqomah_dhuhr = QtWidgets.QLineEdit(self.group_iqomah)
-        self.txt_iqomah_dhuhr.setSizePolicy(sizePolicy)
-        self.txt_iqomah_dhuhr.setBaseSize(QtCore.QSize(0, 0))
-        self.txt_iqomah_dhuhr.setObjectName("txt_iqomah_dhuhr")
-        self.txt_iqomah_dhuhr.setValidator(valid_iqomah)
-        self.txt_iqomah_asr = QtWidgets.QLineEdit(self.group_iqomah)
-        #sizePolicy.setHeightForWidth(self.txt_iqomah_asr.sizePolicy().hasHeightForWidth())
-        self.txt_iqomah_asr.setSizePolicy(sizePolicy)
-        self.txt_iqomah_asr.setBaseSize(QtCore.QSize(0, 0))
-        self.txt_iqomah_asr.setObjectName("txt_iqomah_asr")
-        self.txt_iqomah_asr.setValidator(valid_iqomah)
-        self.txt_iqomah_maghrib = QtWidgets.QLineEdit(self.group_iqomah)
-        self.txt_iqomah_maghrib.setSizePolicy(sizePolicy)
-        self.txt_iqomah_maghrib.setBaseSize(QtCore.QSize(0, 0))
-        self.txt_iqomah_maghrib.setObjectName("txt_iqomah_maghrib")
-        self.txt_iqomah_maghrib.setValidator(valid_iqomah)
-        self.txt_iqomah_isha = QtWidgets.QLineEdit(self.group_iqomah)
-        self.txt_iqomah_isha.setSizePolicy(sizePolicy)
-        self.txt_iqomah_isha.setBaseSize(QtCore.QSize(0, 0))
-        self.txt_iqomah_isha.setObjectName("txt_iqomah_isha")
-        self.txt_iqomah_isha.setValidator(valid_iqomah)
-
         self.check_iqomah_dialog = QtWidgets.QCheckBox(self.group_iqomah)
         self.check_iqomah_dialog.setObjectName("check_iqomah_dialog")
         self.lbl_timeafterathan = QtWidgets.QLabel(self.group_iqomah)
@@ -221,11 +202,6 @@ class SettingsWindow(QtWidgets.QMainWindow):
         self.verticalLayout.addWidget(self.group_iqomah)
 
         self.group_iqomah_layout.addWidget(self.lbl_timeafterathan, 1, 1, 1, 1)
-        self.group_iqomah_layout.addWidget(self.txt_iqomah_fajr, 2, 1, 1, 1)
-        self.group_iqomah_layout.addWidget(self.txt_iqomah_dhuhr, 3, 1, 1, 1)
-        self.group_iqomah_layout.addWidget(self.txt_iqomah_asr, 4, 1, 1, 1)
-        self.group_iqomah_layout.addWidget(self.txt_iqomah_maghrib, 5, 1, 1, 1)
-        self.group_iqomah_layout.addWidget(self.txt_iqomah_isha, 7, 1, 1, 1)
         self.group_iqomah_layout.addWidget(self.desc_iqomah_method, 8, 0, 1, 1)
         self.group_iqomah_layout.addWidget(self.check_iqomah_dialog, 9, 0, 1, 1)
         self.group_iqomah_layout.addWidget(self.check_iqomah_notification, 10, 0, 1, 2)
@@ -240,38 +216,24 @@ class SettingsWindow(QtWidgets.QMainWindow):
         self.verticalLayout.addWidget(self.group_custom)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.layout_reminders.addWidget(self.scrollArea, 0, 0, 1, 1)
+
         self.tabWidget.addTab(self.tab_reminders, "")
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
         self.setCentralWidget(self.centralwidget)
 
         self.tabWidget.setCurrentIndex(0)
 
-        _translate = QtCore.QCoreApplication.translate
-        self.setWindowTitle(_translate("SettingsWindow", "Settings"))
-        self.lbl_lat.setText(_translate("SettingsWindow", "Latitude"))
-        self.lbl_lon.setText(_translate("SettingsWindow", "Longitude"))
-        self.lbl_tz.setText(_translate("SettingsWindow", "Timezone"))
-        self.lbl_calc.setText(_translate("SettingsWindow", "Calculation Method"))
-        self.btn_apply.setText(_translate("SettingsWindow", "Apply"))
-
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_location), _translate("SettingsWindow", "Location"))
+        self.tabWidget.setTabText(
+                self.tabWidget.indexOf(self.tab_location),
+                _translate("SettingsWindow", "Location"))
         self.group_athan.setTitle(_translate("SettingsWindow", "Athan"))
-        self.check_athan_maghrib.setText(_translate("SettingsWindow", "Maghrib"))
-        self.check_athan_fajr.setText(_translate("SettingsWindow", "Fajr"))
-        self.check_athan_dhuhr.setText(_translate("SettingsWindow", "Dhuhr"))
+
         self.desc_athan_method.setText(_translate("SettingsWindow", "Method of reminder"))
         self.desc_athan.setText(_translate("SettingsWindow", "Enable/disable athan reminder"))
-        self.check_athan_asr.setText(_translate("SettingsWindow", "Asr"))
-        self.check_athan_isha.setText(_translate("SettingsWindow", "Isha"))
         self.check_athan_dialog.setText(_translate("SettingsWindow", "Pop up dialog"))
         self.check_athan_notification.setText(_translate("SettingsWindow", "Pop up notification"))
 
         self.group_iqomah.setTitle(_translate("SettingsWindow", "Iqomah"))
-        self.check_iqomah_fajr.setText(_translate("SettingsWindow", "Fajr"))
-        self.check_iqomah_dhuhr.setText(_translate("SettingsWindow", "Dhuhr"))
-        self.check_iqomah_asr.setText(_translate("SettingsWindow", "Asr"))
-        self.check_iqomah_maghrib.setText(_translate("SettingsWindow", "Maghrib"))
-        self.check_iqomah_isha.setText(_translate("SettingsWindow", "Isha"))
         self.check_iqomah_notification.setText(_translate("SettingsWindow", "Pop up notification"))
         self.desc_iqomah.setText(_translate("SettingsWindow", "Enable/disable iqomah reminder"))
         self.check_iqomah_dialog.setText(_translate("SettingsWindow", "Pop up dialog"))
@@ -281,7 +243,9 @@ class SettingsWindow(QtWidgets.QMainWindow):
         self.group_custom.setTitle(_translate("SettingsWindow", "Custom"))
         self.desc_custom.setText(_translate("SettingsWindow", "Coming Soon!"))
 
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_reminders), _translate("SettingsWindow", "Reminders"))
+        self.tabWidget.setTabText(
+                self.tabWidget.indexOf(self.tab_reminders),
+                _translate("SettingsWindow", "Reminders"))
         QtCore.QMetaObject.connectSlotsByName(self)
 
     def apply_settings(self):

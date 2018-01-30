@@ -1,16 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'SettingsWindow.ui'
-#
-# Created by: PyQt5 UI code generator 5.9.2
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 import configparser
 
-from core.settings import SettingsManager
+from core.settings import SettingsManager as settings
 from core.praytimes import PrayTimes
 
 cfg = configparser.ConfigParser()
@@ -50,7 +44,7 @@ class SettingsWindow(QtWidgets.QMainWindow):
         self.lbl_lat.setObjectName("lbl_lat")
         self.txt_lat = QtWidgets.QLineEdit(self.tab_location)
         self.txt_lat.setObjectName("txt_lat")
-        self.txt_lat.setText(str(SettingsManager.lat))
+        self.txt_lat.setText(str(settings.lat))
         self.txt_lat.setValidator(
                 QtGui.QDoubleValidator(-90.0, 90.0, 5))
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.txt_lat)
@@ -63,7 +57,7 @@ class SettingsWindow(QtWidgets.QMainWindow):
         self.txt_lon.setObjectName("txt_lon")
         self.txt_lon.setValidator(
                 QtGui.QDoubleValidator(-180.0, 180.0, 5))
-        self.txt_lon.setText(str(SettingsManager.lon))
+        self.txt_lon.setText(str(settings.lon))
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lbl_lon)
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.txt_lon)
 
@@ -74,7 +68,7 @@ class SettingsWindow(QtWidgets.QMainWindow):
         self.txt_tz.setObjectName("txt_tz")
         self.txt_tz.setValidator(
                 QtGui.QDoubleValidator(-12, 14, 2))
-        self.txt_tz.setText(str(SettingsManager.tz))
+        self.txt_tz.setText(str(settings.tz))
         self.formLayout.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.lbl_tz)
         self.formLayout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.txt_tz)
 
@@ -87,8 +81,8 @@ class SettingsWindow(QtWidgets.QMainWindow):
         calcCodes = prayTimes.methods
         for code in calcCodes:
             self.combo_calc.addItem(code)
-        if (SettingsManager.calcCode != ''):
-            self.combo_calc.setCurrentText(SettingsManager.calcCode)
+        if (settings.calcCode != ''):
+            self.combo_calc.setCurrentText(settings.calcCode)
         #self.box_calc.currentIndexChanged.connect(self.apply_settings)
 
         self.formLayout.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.lbl_calc)
@@ -124,7 +118,6 @@ class SettingsWindow(QtWidgets.QMainWindow):
         self.group_athan_layout = QtWidgets.QGridLayout(self.group_athan)
         self.group_athan_layout.setObjectName("group_athan_layout")
 
-        # TODO https://stackoverflow.com/questions/38437347/qcheckbox-state-change-pyqt4
         self.check_athan = {}
         y = 1
         x = 0
@@ -249,11 +242,26 @@ class SettingsWindow(QtWidgets.QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(self)
 
     def apply_settings(self):
-        if (cfg.sections() == []):
-            cfg['Location'] = {}
-        cfg['Location']['latitude'] = self.txt_lat.text()
-        cfg['Location']['longitude'] = self.txt_lon.text()
-        cfg['Location']['timezone'] = self.txt_tz.text()
-        cfg['Location']['calcCode'] = self.box_calc.currentText()
-        with open('athanpy.cfg', 'w') as cfgfile:
-            cfg.write(cfgfile)
+        location_settings = {
+                'title'    : 'Location', 
+                'latitude' : self.txt_lat.text(),
+                'longitude': self.txt_lon.text(),
+                'timezone' : self.txt_tz.text(),
+                'calcCode' : self.combo_calc.currentText()
+                }
+
+        athan_settings = {'title': 'Reminder: Athan'}
+        iqomah_settings = {'title': 'Reminder: Iqomah'}
+        
+        for name in ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']:
+            athan_settings[name + '_enabled']  = str( int(self.check_athan[name.lower()].isChecked()) )
+            iqomah_settings[name + '_enabled'] = str( int(self.check_iqomah[name.lower()].isChecked()) )
+            iqomah_settings[name + '_time']    = str(self.text_iqomah[name.lower()].text())
+
+        athan_settings['dialog_enabled']        = str( int(self.check_athan_dialog.isChecked()) )
+        athan_settings['notification_enabled']  = str( int(self.check_athan_notification.isChecked()) )
+        iqomah_settings['dialog_enabled']       = str( int(self.check_iqomah_dialog.isChecked()) )
+        iqomah_settings['notification_enabled'] = str( int(self.check_iqomah_notification.isChecked()) )
+
+        sections = [location_settings, athan_settings, iqomah_settings]
+        settings.apply_settings(sections)

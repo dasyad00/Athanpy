@@ -44,7 +44,7 @@ class SettingsWindow(QtWidgets.QMainWindow):
         self.lbl_lat.setObjectName("lbl_lat")
         self.txt_lat = QtWidgets.QLineEdit(self.tab_location)
         self.txt_lat.setObjectName("txt_lat")
-        self.txt_lat.setText(str(settings.lat))
+        self.txt_lat.setText(str(settings.location['lat']))
         self.txt_lat.setValidator(
                 QtGui.QDoubleValidator(-90.0, 90.0, 5))
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.txt_lat)
@@ -57,7 +57,7 @@ class SettingsWindow(QtWidgets.QMainWindow):
         self.txt_lon.setObjectName("txt_lon")
         self.txt_lon.setValidator(
                 QtGui.QDoubleValidator(-180.0, 180.0, 5))
-        self.txt_lon.setText(str(settings.lon))
+        self.txt_lon.setText(str(settings.location['lon']))
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lbl_lon)
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.txt_lon)
 
@@ -68,7 +68,7 @@ class SettingsWindow(QtWidgets.QMainWindow):
         self.txt_tz.setObjectName("txt_tz")
         self.txt_tz.setValidator(
                 QtGui.QDoubleValidator(-12, 14, 2))
-        self.txt_tz.setText(str(settings.tz))
+        self.txt_tz.setText(str(settings.location['tz']))
         self.formLayout.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.lbl_tz)
         self.formLayout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.txt_tz)
 
@@ -81,9 +81,8 @@ class SettingsWindow(QtWidgets.QMainWindow):
         calcCodes = prayTimes.methods
         for code in calcCodes:
             self.combo_calc.addItem(code)
-        if (settings.calcCode != ''):
+        if (settings.location['calcCode'] != ''):
             self.combo_calc.setCurrentText(settings.calcCode)
-        #self.box_calc.currentIndexChanged.connect(self.apply_settings)
 
         self.formLayout.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.lbl_calc)
         self.formLayout.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.combo_calc)
@@ -125,6 +124,8 @@ class SettingsWindow(QtWidgets.QMainWindow):
             self.check_athan[name.lower()] = QtWidgets.QCheckBox(self.group_athan)
             self.check_athan[name.lower()].setObjectName("check_athan_" + name.lower())
             self.check_athan[name.lower()].setText(_translate("SettingsWindow", name))
+            self.check_athan[name.lower()].setChecked(
+                    settings.reminder_athan[name.lower() + '_enabled'] == '1')
             self.group_athan_layout.addWidget(self.check_athan[name.lower()], y, x, 1, 1)
             if name == 'Asr':
                 y = 1
@@ -137,8 +138,12 @@ class SettingsWindow(QtWidgets.QMainWindow):
         self.desc_athan.setObjectName("desc_athan")
         self.check_athan_dialog = QtWidgets.QCheckBox(self.group_athan)
         self.check_athan_dialog.setObjectName("check_athan_dialog")
+        self.check_athan_dialog.setChecked(
+                settings.reminder_athan['dialog_enabled'] == '1')
         self.check_athan_notification = QtWidgets.QCheckBox(self.group_athan)
         self.check_athan_notification.setObjectName("check_athan_notification")
+        self.check_athan_notification.setChecked(
+                settings.reminder_athan['notification_enabled'] == '1')
 
         self.group_athan_layout.addWidget(self.desc_athan_method, 4, 0, 1, 2)
         self.group_athan_layout.addWidget(self.desc_athan, 0, 0, 1, 2)
@@ -166,6 +171,8 @@ class SettingsWindow(QtWidgets.QMainWindow):
             self.check_iqomah[name.lower()] = QtWidgets.QCheckBox(self.group_iqomah)
             self.check_iqomah[name.lower()].setObjectName("check_iqomah_" + name.lower())
             self.check_iqomah[name.lower()].setText(_translate("SettingsWindow", name))
+            self.check_iqomah[name.lower()].setChecked(
+                    settings.reminder_iqomah[name.lower() + '_enabled'] == '1')
 
             self.text_iqomah[name.lower()] = QtWidgets.QLineEdit(self.group_iqomah)
             self.text_iqomah[name.lower()].setSizePolicy(sizePolicy)
@@ -183,11 +190,15 @@ class SettingsWindow(QtWidgets.QMainWindow):
 
         self.check_iqomah_notification = QtWidgets.QCheckBox(self.group_iqomah)
         self.check_iqomah_notification.setObjectName("check_iqomah_notification")
+        self.check_iqomah_notification.setChecked(
+                settings.reminder_iqomah['notification_enabled'] == '1')
         self.desc_iqomah = QtWidgets.QLabel(self.group_iqomah)
         self.desc_iqomah.setObjectName("desc_iqomah")
         self.group_iqomah_layout.addWidget(self.desc_iqomah, 0, 0, 1, 2)
         self.check_iqomah_dialog = QtWidgets.QCheckBox(self.group_iqomah)
         self.check_iqomah_dialog.setObjectName("check_iqomah_dialog")
+        self.check_iqomah_dialog.setChecked(
+                settings.reminder_iqomah['dialog_enabled'] == '1')
         self.lbl_timeafterathan = QtWidgets.QLabel(self.group_iqomah)
         self.lbl_timeafterathan.setObjectName("lbl_timeafterathan")
         self.desc_iqomah_method = QtWidgets.QLabel(self.group_iqomah)

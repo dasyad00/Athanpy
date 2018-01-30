@@ -21,7 +21,7 @@ class SettingsManager():
             setupfunction()
             cfg.read('athanpy.cfg')
         
-        SettingsManager.location_settings = {
+        SettingsManager.location = {
                 'lat': float(cfg['Location'].get('latitude')),
                 'lon': float(cfg['Location'].get('longitude')),
                 'tz' : float(cfg['Location'].get('timezone')),
@@ -31,9 +31,17 @@ class SettingsManager():
         #SettingsManager.tz  = float(cfg['Location'].get('timezone'))
         #SettingsManager.calcCode  = cfg['Location'].get('calcCode')
 
-        SettingsManager.reminder_athan = {}
+        SettingsManager.reminder_athan  = {}
+        SettingsManager.reminder_iqomah = {}
         for name in ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']:
-            pass
+            SettingsManager.reminder_athan[name.lower() + '_enabled']  = cfg['Reminder: Athan'].get(name + '_enabled')
+            SettingsManager.reminder_iqomah[name.lower() + '_enabled'] = cfg['Reminder: Iqomah'].get(name + '_enabled')
+            SettingsManager.reminder_iqomah[name.lower() + '_time']    = cfg['Reminder: Iqomah'].get(name + '_time')
+
+        SettingsManager.reminder_athan['dialog_enabled']        = cfg['Reminder: Athan'].get('dialog_enabled')
+        SettingsManager.reminder_athan['notification_enabled']  = cfg['Reminder: Athan'].get('notification_enabled')
+        SettingsManager.reminder_iqomah['dialog_enabled']       = cfg['Reminder: Iqomah'].get('dialog_enabled')
+        SettingsManager.reminder_iqomah['notification_enabled'] = cfg['Reminder: Iqomah'].get('notification_enabled')
 
     def apply_settings(sections):
         for section in sections:
@@ -49,11 +57,12 @@ class SettingsManager():
             SettingsManager.refreshVariables()
 
     def calcTimes(nextDay=False):
-        prayTimes.setMethod(SettingsManager.calcCode)
+        prayTimes.setMethod(SettingsManager.location['calcCode'])
         # getTimes(self, date, coords, timezone)
         time = datetime.date.today()
+        print(time)
         if nextDay:
             time = time + datetime.timedelta(days=1)
-        SettingsManager.times = prayTimes.getTimes(datetime.date.today(),
-                (SettingsManager.lat, SettingsManager.lon), SettingsManager.tz)
+        SettingsManager.times = prayTimes.getTimes(time,
+                (SettingsManager.location['lat'], SettingsManager.location['lon']), SettingsManager.location['tz'])
 

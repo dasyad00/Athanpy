@@ -1,10 +1,10 @@
 #!/usr/bin/python
-from core.settings import SettingsManager
+from core.settings import SettingsManager as settings
 
 import os
 import threading
 import sched, time
-import datetime
+from datetime import datetime, timedelta
 
 import simpleaudio as sa
 
@@ -30,10 +30,7 @@ class AlarmDaemon(QThread):
         self.play_athan = athan_sound.play()
         message = 'Time for' + athan_name + '!'
         print(message)
-        if athan_name == 'Isha':
-            print('calculating times for next day')
-            SettingsManager.calcTimes(True)
-        self.schedule_alarm(SettingsManager.times)
+        self.schedule_alarm(settings.times)
         # TODO show pop up message/notification
         popUp = QMessageBox.information(self.mainW,
                 "AthanPy", message, QMessageBox.Ok)
@@ -50,22 +47,40 @@ class AlarmDaemon(QThread):
         #self.stop_sound()
 
     # TODO use PrayTims class to get Athan names
-    def schedule_alarm(self, times, nextDay=True):
+    def schedule_alarm(self, times, nextDay=False):
 #        now = time.strftime("%H:%M")
-        now = datetime.datetime.now()
+        now = datetime.now()
+        athan_settings = settings.reminder_athan
+        iqomah_settings = settings.reminder_iqomah
         for p in ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']:
-            athan_time = datetime.datetime.today()
+            athan_time = datetime.today()
             athan_time = athan_time.replace(
                 hour=int(times[p.lower()][0:2]),
                 minute=int(times[p.lower()][3:]),
                 second=0,
                 microsecond=0
             )
+            if nextDay:
+                athan_time += timedelta(days=1)
+
             if now < athan_time:
+                # TODO let user choose between dialog and notification 
                 self.next_alarm = self.scheduler.enterabs(
-                        athan_time.timestamp(), 1, self.alarm_action, argument={p})
+                    athan_time.timestamp(), 1, self.alarm_action, argument={p})
                 print('Athan for ', p, ' set at:', athan_time)
                 break
+            elif iqomah_settings[p.lower() + '_enabled'] == '1':
+                iqomah_time = athan_time + timedelta(
+                    minutes=int(iqomah_settings[p.lower() + '_time']))
+                if now < iqomah_time:
+                    self.next_alarm = self.scheduler.enterabs(
+                        iqomah_time.timestamp(), 1, self.alarm_action, argument={p})
+                    print('Iqomah for ', p, ' set at:', athan_time)
+                    break
+        else:
+            # Only runs when program is run after Isha
+            settings.calcTimes(True)
+            self.schedule_alarm(settings.times, nextDay=True)
 
     def stop_sound(self):
         if self.play_athan is not None:

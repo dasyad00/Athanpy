@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 import configparser
 
 from core.praytimes import PrayTimes
@@ -59,10 +59,15 @@ class SettingsManager():
     def calcTimes(nextDay=False):
         prayTimes.setMethod(SettingsManager.location['calcCode'])
         # getTimes(self, date, coords, timezone)
-        time = datetime.date.today()
-        print(time)
+        time = datetime.today()
         if nextDay:
-            time = time + datetime.timedelta(days=1)
-        SettingsManager.times = prayTimes.getTimes(time,
+            time += timedelta(days=1)
+            time = time.replace(
+                hour = 0,
+                minute = 0,
+                second = 0,
+                microsecond=0
+            )
+        SettingsManager.times = prayTimes.getTimes(time.date(),
                 (SettingsManager.location['lat'], SettingsManager.location['lon']), SettingsManager.location['tz'])
 

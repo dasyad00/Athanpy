@@ -3,12 +3,11 @@
 # Doha, Qatar - 25.3, 51.5, 3
 from datetime import date
 from core.praytimes import PrayTimes
-from core.settings import SettingsManager
+from core.settings import SettingsManager as settings
 
 import configparser
 
 prayTimes = PrayTimes()
-settings = SettingsManager()
 cfg = configparser.ConfigParser()
 
 def setup_wizard():
@@ -37,7 +36,7 @@ def setup_wizard():
     with open('athanpy.cfg', 'w') as cfgfile:
         cfg.write(cfgfile)
 
-settings.refreshVariables(setup_wizard)
+settings.refreshVariables()
 settings.calcTimes()
 
 # Does not work

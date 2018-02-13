@@ -86,17 +86,24 @@ class MainWindow(QtWidgets.QMainWindow):
 
         show_action = QtWidgets.QAction("Show", self)
         hide_action = QtWidgets.QAction("Hide", self)
-        stopathan_action = QtWidgets.QAction("Stop athan", self)
+        mute_action = QtWidgets.QAction("Mute sound", self)
+        stopsound_action = QtWidgets.QAction("Stop sound", self)
         quit_action = QtWidgets.QAction("Quit", self)
+
         show_action.triggered.connect(self.show)
         hide_action.triggered.connect(self.hide)
-        stopathan_action.triggered.connect(self.alarm.stop_sound)
+        mute_action.setCheckable(True)
+        mute_action.changed.connect(
+            lambda: self.alarm.set_mute(mute_action.isChecked()))
+        stopsound_action.triggered.connect(self.alarm.stop_sound)
         quit_action.triggered.connect(QtCore.QCoreApplication.quit)
+
         tray_menu = QtWidgets.QMenu()
         tray_menu.addAction(show_action)
         tray_menu.addAction(hide_action)
         tray_menu.addSeparator()
-        tray_menu.addAction(stopathan_action)
+        tray_menu.addAction(stopsound_action)
+        tray_menu.addAction(mute_action)
         tray_menu.addSeparator()
         tray_menu.addAction(quit_action)
         self.tray_icon.setContextMenu(tray_menu)
@@ -123,8 +130,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         times = SettingsManager.times
         # For testing purposes, comment/delete when not in use
-        times['dhuhr'] = '08:02'
-        times['asr'] = '08:03'
+        #times['dhuhr'] = '08:02'
+        #times['asr'] = '08:03'
 #        times['isha'] = '16:20'
         output = ''
         for i in ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Midnight']:

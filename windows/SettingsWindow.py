@@ -172,7 +172,7 @@ class SettingsWindow(QtWidgets.QMainWindow):
             self.check_iqomah[name.lower()].setObjectName("check_iqomah_" + name.lower())
             self.check_iqomah[name.lower()].setText(_translate("SettingsWindow", name))
             self.check_iqomah[name.lower()].setChecked(
-                    settings.reminder_iqomah[name.lower() + '_enabled'] == '1')
+                settings.reminder_iqomah[name.lower() + '_enabled'] == '1')
 
             self.text_iqomah[name.lower()] = QtWidgets.QLineEdit(self.group_iqomah)
             self.text_iqomah[name.lower()].setSizePolicy(sizePolicy)
@@ -180,6 +180,8 @@ class SettingsWindow(QtWidgets.QMainWindow):
             self.text_iqomah[name.lower()].setReadOnly(False)
             self.text_iqomah[name.lower()].setObjectName("txt_iqomah_" + name.lower())
             self.text_iqomah[name.lower()].setValidator(valid_iqomah)
+            self.text_iqomah[name.lower()].setText(
+                settings.reminder_iqomah[name.lower() + '_time'])
             self.text_iqomah[name.lower()].setDisabled(not self.check_iqomah[name.lower()].isChecked())
 
             self.check_iqomah[name.lower()].toggled.connect(

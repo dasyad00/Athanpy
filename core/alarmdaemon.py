@@ -17,6 +17,7 @@ class AlarmDaemon(QThread):
         self.scheduler = sched.scheduler(time.time, time.sleep)
 #        self.settingsmgr = SettingsManager()
         self.play_sound = None
+        self.mute = False
         self.mainW = mainReference
 
     def __del__(self):
@@ -25,15 +26,16 @@ class AlarmDaemon(QThread):
     def run(self):
         self.scheduler.run()
 
-    def alarm_action(self, alarm_text, alarm_sound):
-        self.play_sound = alarm_sound.play()
-        print(alarm_text)
+    def alarm_action(self, alarm_sound, alarm_text):
         self.schedule_alarm(settings.times)
-        # TODO show pop up message/notification
-        popUp = QMessageBox.information(self.mainW,
-                "AthanPy", alarm_text, QMessageBox.Ok)
-        if popUp == QMessageBox.Ok:
-            self.stop_sound()
+        if not self.mute:
+            self.play_sound = alarm_sound.play()
+            print(alarm_text)
+            # TODO show pop up message/notification
+            popUp = QMessageBox.information(self.mainW,
+                    "AthanPy", alarm_text, QMessageBox.Ok)
+            if popUp == QMessageBox.Ok:
+                self.stop_sound()
         #popUp = QMessageBox()
         #popUp.setIcon(QMessageBox.Information)
         #popUp.setText(str(message))
@@ -63,14 +65,13 @@ class AlarmDaemon(QThread):
 
             if now < athan_time:
                 # TODO let user choose between dialog and notification 
-                athan_sound = None 
                 if p == 'Fajr':
                     athan_sound = sa.WaveObject.from_wave_file('audio/athan_makkah_fajr.wav')
                 else:
                     athan_sound = sa.WaveObject.from_wave_file('audio/athan_makkah.wav')
                 self.next_alarm = self.scheduler.enterabs(
-                    athan_time.timestamp(), 1, self.alarm_action, argument={
-                        p, athan_sound, 'Athan: Time for ' + p + '!'})
+                    athan_time.timestamp(), 1, self.alarm_action, argument=(
+                        athan_sound, 'Athan: Time for ' + p + '!'))
                 print('Athan for ', p, ' set at:', athan_time)
                 break
             elif iqomah_settings[p.lower() + '_enabled'] == '1':
@@ -79,14 +80,18 @@ class AlarmDaemon(QThread):
                 if now < iqomah_time:
                     iqomah_sound = sa.WaveObject.from_wave_file('audio/iqomah_misharyrashid.wav')
                     self.next_alarm = self.scheduler.enterabs(
-                        iqomah_time.timestamp(), 1, self.alarm_action, argument={
-                            p, iqomah_sound, 'Iqomah: ' + p + ' prayer has started!'})
-                    print('Iqomah for ', p, ' set at:', athan_time)
+                        iqomah_time.timestamp(), 1, self.alarm_action, argument=(
+                            iqomah_sound, 'Iqomah: ' + p + ' prayer has started!'))
+                    print('Iqomah for ', p, ' set at:', iqomah_time)
                     break
         else:
             # Only runs when program is run after Isha
             settings.calcTimes(True)
             self.schedule_alarm(settings.times, nextDay=True)
+
+    def set_mute(self, status):
+        print('Mute status: ' + str( status ))
+        self.mute = status
 
     def stop_sound(self):
         if self.play_sound is not None:

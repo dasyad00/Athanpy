@@ -132,23 +132,23 @@ class SettingsWindow(QtWidgets.QMainWindow):
                 x = 1
             else:
                 y += 1
-        self.desc_athan_method = QtWidgets.QLabel(self.group_athan)
-        self.desc_athan_method.setObjectName("desc_athan_method")
+#        self.desc_athan_method = QtWidgets.QLabel(self.group_athan)
+#        self.desc_athan_method.setObjectName("desc_athan_method")
         self.desc_athan = QtWidgets.QLabel(self.group_athan)
         self.desc_athan.setObjectName("desc_athan")
-        self.check_athan_dialog = QtWidgets.QCheckBox(self.group_athan)
-        self.check_athan_dialog.setObjectName("check_athan_dialog")
-        self.check_athan_dialog.setChecked(
-                settings.reminder_athan['dialog_enabled'] == '1')
-        self.check_athan_notification = QtWidgets.QCheckBox(self.group_athan)
-        self.check_athan_notification.setObjectName("check_athan_notification")
-        self.check_athan_notification.setChecked(
-                settings.reminder_athan['notification_enabled'] == '1')
+#        self.check_athan_dialog = QtWidgets.QCheckBox(self.group_athan)
+#        self.check_athan_dialog.setObjectName("check_athan_dialog")
+#        self.check_athan_dialog.setChecked(
+#                settings.reminder_athan['dialog_enabled'] == '1')
+#        self.check_athan_notification = QtWidgets.QCheckBox(self.group_athan)
+#        self.check_athan_notification.setObjectName("check_athan_notification")
+#        self.check_athan_notification.setChecked(
+#                settings.reminder_athan['notification_enabled'] == '1')
 
-        self.group_athan_layout.addWidget(self.desc_athan_method, 4, 0, 1, 2)
+#        self.group_athan_layout.addWidget(self.desc_athan_method, 4, 0, 1, 2)
         self.group_athan_layout.addWidget(self.desc_athan, 0, 0, 1, 2)
-        self.group_athan_layout.addWidget(self.check_athan_dialog, 5, 0, 1, 2)
-        self.group_athan_layout.addWidget(self.check_athan_notification, 6, 0, 1, 2)
+#        self.group_athan_layout.addWidget(self.check_athan_dialog, 5, 0, 1, 2)
+#        self.group_athan_layout.addWidget(self.check_athan_notification, 6, 0, 1, 2)
 
         self.verticalLayout.addWidget(self.group_athan)
 
@@ -190,27 +190,27 @@ class SettingsWindow(QtWidgets.QMainWindow):
             self.group_iqomah_layout.addWidget(self.text_iqomah[name.lower()], y, 1, 1, 1)
             y += 1
 
-        self.check_iqomah_notification = QtWidgets.QCheckBox(self.group_iqomah)
-        self.check_iqomah_notification.setObjectName("check_iqomah_notification")
-        self.check_iqomah_notification.setChecked(
-                settings.reminder_iqomah['notification_enabled'] == '1')
+#        self.check_iqomah_notification = QtWidgets.QCheckBox(self.group_iqomah)
+#        self.check_iqomah_notification.setObjectName("check_iqomah_notification")
+#        self.check_iqomah_notification.setChecked(
+#                settings.reminder_iqomah['notification_enabled'] == '1')
         self.desc_iqomah = QtWidgets.QLabel(self.group_iqomah)
         self.desc_iqomah.setObjectName("desc_iqomah")
         self.group_iqomah_layout.addWidget(self.desc_iqomah, 0, 0, 1, 2)
-        self.check_iqomah_dialog = QtWidgets.QCheckBox(self.group_iqomah)
-        self.check_iqomah_dialog.setObjectName("check_iqomah_dialog")
-        self.check_iqomah_dialog.setChecked(
-                settings.reminder_iqomah['dialog_enabled'] == '1')
+#        self.check_iqomah_dialog = QtWidgets.QCheckBox(self.group_iqomah)
+#        self.check_iqomah_dialog.setObjectName("check_iqomah_dialog")
+#        self.check_iqomah_dialog.setChecked(
+#                settings.reminder_iqomah['dialog_enabled'] == '1')
         self.lbl_timeafterathan = QtWidgets.QLabel(self.group_iqomah)
         self.lbl_timeafterathan.setObjectName("lbl_timeafterathan")
-        self.desc_iqomah_method = QtWidgets.QLabel(self.group_iqomah)
-        self.desc_iqomah_method.setObjectName("desc_iqomah_method")
+#        self.desc_iqomah_method = QtWidgets.QLabel(self.group_iqomah)
+#        self.desc_iqomah_method.setObjectName("desc_iqomah_method")
         self.verticalLayout.addWidget(self.group_iqomah)
 
         self.group_iqomah_layout.addWidget(self.lbl_timeafterathan, 1, 1, 1, 1)
-        self.group_iqomah_layout.addWidget(self.desc_iqomah_method, 8, 0, 1, 1)
-        self.group_iqomah_layout.addWidget(self.check_iqomah_dialog, 9, 0, 1, 1)
-        self.group_iqomah_layout.addWidget(self.check_iqomah_notification, 10, 0, 1, 2)
+#        self.group_iqomah_layout.addWidget(self.desc_iqomah_method, 8, 0, 1, 1)
+#        self.group_iqomah_layout.addWidget(self.check_iqomah_dialog, 9, 0, 1, 1)
+#        self.group_iqomah_layout.addWidget(self.check_iqomah_notification, 10, 0, 1, 2)
 
         self.group_custom = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
         self.group_custom.setObjectName("group_custom")
@@ -234,17 +234,17 @@ class SettingsWindow(QtWidgets.QMainWindow):
                 _translate("SettingsWindow", "Location"))
         self.group_athan.setTitle(_translate("SettingsWindow", "Athan"))
 
-        self.desc_athan_method.setText(_translate("SettingsWindow", "Method of reminder"))
+#        self.desc_athan_method.setText(_translate("SettingsWindow", "Method of reminder"))
         self.desc_athan.setText(_translate("SettingsWindow", "Enable/disable athan reminder"))
-        self.check_athan_dialog.setText(_translate("SettingsWindow", "Pop up dialog"))
-        self.check_athan_notification.setText(_translate("SettingsWindow", "Pop up notification"))
+#        self.check_athan_dialog.setText(_translate("SettingsWindow", "Pop up dialog"))
+#        self.check_athan_notification.setText(_translate("SettingsWindow", "Pop up notification"))
 
         self.group_iqomah.setTitle(_translate("SettingsWindow", "Iqomah"))
-        self.check_iqomah_notification.setText(_translate("SettingsWindow", "Pop up notification"))
+#        self.check_iqomah_notification.setText(_translate("SettingsWindow", "Pop up notification"))
         self.desc_iqomah.setText(_translate("SettingsWindow", "Enable/disable iqomah reminder"))
-        self.check_iqomah_dialog.setText(_translate("SettingsWindow", "Pop up dialog"))
+#        self.check_iqomah_dialog.setText(_translate("SettingsWindow", "Pop up dialog"))
         self.lbl_timeafterathan.setText(_translate("SettingsWindow", "Time after Athan"))
-        self.desc_iqomah_method.setText(_translate("SettingsWindow", "Method of reminder"))
+#        self.desc_iqomah_method.setText(_translate("SettingsWindow", "Method of reminder"))
 
         self.group_custom.setTitle(_translate("SettingsWindow", "Custom"))
         self.desc_custom.setText(_translate("SettingsWindow", "Coming Soon!"))
@@ -271,10 +271,10 @@ class SettingsWindow(QtWidgets.QMainWindow):
             iqomah_settings[name + '_enabled'] = str( int(self.check_iqomah[name.lower()].isChecked()) )
             iqomah_settings[name + '_time']    = str(self.text_iqomah[name.lower()].text())
 
-        athan_settings['dialog_enabled']        = str( int(self.check_athan_dialog.isChecked()) )
-        athan_settings['notification_enabled']  = str( int(self.check_athan_notification.isChecked()) )
-        iqomah_settings['dialog_enabled']       = str( int(self.check_iqomah_dialog.isChecked()) )
-        iqomah_settings['notification_enabled'] = str( int(self.check_iqomah_notification.isChecked()) )
+#        athan_settings['dialog_enabled']        = str( int(self.check_athan_dialog.isChecked()) )
+#        athan_settings['notification_enabled']  = str( int(self.check_athan_notification.isChecked()) )
+#        iqomah_settings['dialog_enabled']       = str( int(self.check_iqomah_dialog.isChecked()) )
+#        iqomah_settings['notification_enabled'] = str( int(self.check_iqomah_notification.isChecked()) )
 
         sections = [location_settings, athan_settings, iqomah_settings]
         settings.apply_settings(sections)

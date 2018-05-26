@@ -71,3 +71,19 @@ class SettingsManager():
         SettingsManager.times = prayTimes.getTimes(time.date(),
                 (SettingsManager.location['lat'], SettingsManager.location['lon']), SettingsManager.location['tz'])
 
+    def load_coordinates():
+        f = open("core/coordinates.csv", 'r')
+        results = { '' : '' }
+        for line in f:
+            field = list(map(lambda x: x.strip(), line.split(',')))
+            # If city recorded still in the same country, fill in city
+            # If new country detected, make new dictionary
+            if field[0] not in results and field[0] != '':
+                results[field[0]] = { '' : ''}
+                results[field[0]]['province'] = bool(field[1] != "")
+            if results[field[0]]['province']:
+                results[field[0]][field[1]] = { '' : '' }
+                results[field[0]][field[1]][field[2]] = [ field[3], field[4] ]
+            else:
+                results[field[0]][field[2]] = [ field[3], field[4] ]
+        return results

@@ -41,10 +41,12 @@ class SettingsWindow(QMainWindow):
         self.formLayout.setObjectName("formLayout")
 
         ## Saved coordinates
+        self.coordinates = settings.load_coordinates()
         lbl_country = QLabel(self.tab_location)
         lbl_country.setObjectName("lbl_country")
         self.combo_country = QComboBox(self.tab_location)
         self.combo_country.setObjectName("combo_country")
+        self.combo_country.addItems(self.coordinates.keys())
 
         lbl_prov = QLabel(self.tab_location)
         lbl_prov.setObjectName("lbl_prov")
@@ -56,14 +58,12 @@ class SettingsWindow(QMainWindow):
         self.combo_city = QComboBox(self.tab_location)
         self.combo_city.setObjectName("combo_city")
 
-        self.coordinates = settings.load_coordinates()
-        self.combo_country.currentTextChanged.connect(self.setProvText)
-        self.combo_country.addItems(self.coordinates.keys())
-        self.combo_country.setCurrentText('')
+        #self.combo_country.setCurrentText('')
             #lambda x: self.combo_prov.addItems(coordinates[x])
-        self.combo_prov.currentTextChanged.connect(self.setCityText)
             #lambda x: combo_city.addItems(coordinates[x])
-        self.combo_city.currentTextChanged.connect(self.setCoordinates)
+
+        
+
 
         self.formLayout.setWidget(1, QFormLayout.LabelRole, lbl_country)
         self.formLayout.setWidget(1, QFormLayout.FieldRole, self.combo_country)
@@ -115,7 +115,9 @@ class SettingsWindow(QMainWindow):
         for code in calcCodes:
             self.combo_calc.addItem(code)
         if (settings.location['calcCode'] != ''):
-            self.combo_calc.setCurrentText(settings.calcCode)
+            #self.combo_calc.setCurrentText(settings.calcCode)
+            self.combo_calc.setCurrentIndex(
+                    self.combo_calc.findText(settings.location['calcCode']))
 
         self.formLayout.setWidget(7, QFormLayout.LabelRole, self.lbl_calc)
         self.formLayout.setWidget(7, QFormLayout.FieldRole, self.combo_calc)
@@ -123,7 +125,22 @@ class SettingsWindow(QMainWindow):
         
         self.tabWidget.addTab(self.tab_location, "")
 
+        # Extra functions
+        self.combo_country.currentTextChanged.connect(self.setProvText)
+        self.combo_prov.currentTextChanged.connect(self.setCityText)
+        self.combo_city.currentTextChanged.connect(self.setCoordinates)
+
+        self.combo_country.setCurrentIndex(
+                self.combo_country.findText(settings.location['country']))
+        self.combo_prov.setCurrentIndex(
+                self.combo_prov.findText(settings.location['province']))
+        self.combo_city.setCurrentIndex(
+                self.combo_city.findText(settings.location['city']))
+
         self.setWindowTitle(_translate("SettingsWindow", "Settings"))
+        lbl_country.setText(_translate("SettingsWindow", "Country"))
+        lbl_prov.setText(_translate("SettingsWindow", "Province"))
+        lbl_city.setText(_translate("SettingsWindow", "City"))
         self.lbl_lat.setText(_translate("SettingsWindow", "Latitude"))
         self.lbl_lon.setText(_translate("SettingsWindow", "Longitude"))
         self.lbl_tz.setText(_translate("SettingsWindow", "Timezone"))
@@ -290,6 +307,9 @@ class SettingsWindow(QMainWindow):
     def apply_settings(self):
         location_settings = {
                 'title'    : 'Location', 
+                'country'  : self.combo_country.currentText(),
+                'province' : self.combo_prov.currentText(),
+                'city'     : self.combo_city.currentText(),
                 'latitude' : self.txt_lat.text(),
                 'longitude': self.txt_lon.text(),
                 'timezone' : self.txt_tz.text(),
@@ -313,7 +333,6 @@ class SettingsWindow(QMainWindow):
         settings.apply_settings(sections)
 
     def setProvText(self, country):
-        print('setProvText called')
         try: self.combo_prov.currentTextChanged.disconnect()
         except TypeError: pass
         if self.coordinates[country] != '':
@@ -331,20 +350,29 @@ class SettingsWindow(QMainWindow):
         self.combo_city.setCurrentText('')
     
     def setCityText(self, countryprov):
-        print('setCityText called')
         self.combo_city.clear()
         if self.enableProv:
             if self.coordinates[self.combo_country.currentText()][self.combo_prov.currentText()] != '':
                 for item in self.coordinates[self.combo_country.currentText()][self.combo_prov.currentText()].keys():
                     if item != 'province':
                         self.combo_city.addItem(item)
-            #self.combo_city.addItems(self.coordinates[self.combo_country.currentText()][self.combo_prov.currentText()].keys())
         else:
-            for item in self.coordinates[self.combo_country.currentText()].keys():
-                if item != 'province':
-                    self.combo_city.addItems(self.coordinates[self.combo_country.currentText()].keys())
+            if self.coordinates[self.combo_country.currentText()] != '':
+                for item in self.coordinates[self.combo_country.currentText()].keys():
+                    if item != 'province':
+                        self.combo_city.addItem(item)
         self.combo_city.setCurrentText('')
 
     def setCoordinates(self, city):
         # TODO make this work
-        pass
+        if self.combo_country.currentText() != '' and \
+                self.combo_prov.currentText() != '' and \
+                self.combo_city.currentText() != '':
+            if self.enableProv:
+                latlon = self.coordinates[self.combo_country.currentText()][self.combo_prov.currentText()][self.combo_city.currentText()]
+            else:
+                latlon = self.coordinates[self.combo_country.currentText()][self.combo_city.currentText()]
+            lat = latlon[0]
+            lon = latlon[1]
+            self.txt_lat.setText(lat)
+            self.txt_lon.setText(lon)

@@ -22,9 +22,12 @@ class SettingsManager():
             cfg.read('athanpy.cfg')
         
         SettingsManager.location = {
-                'lat': float(cfg['Location'].get('latitude')),
-                'lon': float(cfg['Location'].get('longitude')),
-                'tz' : float(cfg['Location'].get('timezone')),
+                'country'  : cfg['Location'].get('country'),
+                'province' : cfg['Location'].get('province'),
+                'city'     : cfg['Location'].get('city'),
+                'lat'      : float(cfg['Location'].get('latitude')),
+                'lon'      : float(cfg['Location'].get('longitude')),
+                'tz'       : float(cfg['Location'].get('timezone')),
                 'calcCode' : cfg['Location'].get('calcCode')}
         #SettingsManager.lat = float(cfg['Location'].get('latitude'))
         #SettingsManager.lon = float(cfg['Location'].get('longitude'))

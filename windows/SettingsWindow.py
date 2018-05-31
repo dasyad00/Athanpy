@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from PyQt5 import QtCore, QtGui
+from PyQt5.QtGui import QDoubleValidator, QIntValidator
+from PyQt5.QtCore import QCoreApplication, QSize, QRect, QMetaObject
 from PyQt5.QtWidgets import QMainWindow, QWidget, QGridLayout, QPushButton, QLabel, QFormLayout, QTabWidget, QLineEdit, QComboBox, QScrollArea, QVBoxLayout, QGroupBox, QCheckBox, QSizePolicy
 import configparser
 
@@ -15,9 +16,9 @@ prayTimes = PrayTimes()
 class SettingsWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
-        _translate = QtCore.QCoreApplication.translate
+        _translate = QCoreApplication.translate
         
-        self.setMinimumSize(QtCore.QSize(360,240))
+        self.setMinimumSize(QSize(360,240))
         self.setObjectName("SettingsWindow")
         self.centralwidget = QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
@@ -79,7 +80,7 @@ class SettingsWindow(QMainWindow):
         self.txt_lat.setObjectName("txt_lat")
         self.txt_lat.setText(str(settings.location['lat']))
         self.txt_lat.setValidator(
-                QtGui.QDoubleValidator(-90.0, 90.0, 5))
+                QDoubleValidator(-90.0, 90.0, 5))
         self.formLayout.setWidget(4, QFormLayout.FieldRole, self.txt_lat)
         self.formLayout.setWidget(4, QFormLayout.LabelRole, self.lbl_lat)
 
@@ -89,7 +90,7 @@ class SettingsWindow(QMainWindow):
         self.txt_lon = QLineEdit(self.tab_location)
         self.txt_lon.setObjectName("txt_lon")
         self.txt_lon.setValidator(
-                QtGui.QDoubleValidator(-180.0, 180.0, 5))
+                QDoubleValidator(-180.0, 180.0, 5))
         self.txt_lon.setText(str(settings.location['lon']))
         self.formLayout.setWidget(5, QFormLayout.LabelRole, self.lbl_lon)
         self.formLayout.setWidget(5, QFormLayout.FieldRole, self.txt_lon)
@@ -100,7 +101,7 @@ class SettingsWindow(QMainWindow):
         self.txt_tz = QLineEdit(self.tab_location)
         self.txt_tz.setObjectName("txt_tz")
         self.txt_tz.setValidator(
-                QtGui.QDoubleValidator(-12, 14, 2))
+                QDoubleValidator(-12, 14, 2))
         self.txt_tz.setText(str(settings.location['tz']))
         self.formLayout.setWidget(6, QFormLayout.LabelRole, self.lbl_tz)
         self.formLayout.setWidget(6, QFormLayout.FieldRole, self.txt_tz)
@@ -156,7 +157,7 @@ class SettingsWindow(QMainWindow):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 304, 598))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 304, 598))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -210,7 +211,7 @@ class SettingsWindow(QMainWindow):
         self.group_iqomah_layout = QGridLayout(self.group_iqomah)
         self.group_iqomah_layout.setObjectName("group_iqomah_layout")
 
-        valid_iqomah = QtGui.QIntValidator(1, 60)
+        valid_iqomah = QIntValidator(1, 60)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -226,7 +227,7 @@ class SettingsWindow(QMainWindow):
 
             self.text_iqomah[name.lower()] = QLineEdit(self.group_iqomah)
             self.text_iqomah[name.lower()].setSizePolicy(sizePolicy)
-            self.text_iqomah[name.lower()].setBaseSize(QtCore.QSize(0, 0))
+            self.text_iqomah[name.lower()].setBaseSize(QSize(0, 0))
             self.text_iqomah[name.lower()].setReadOnly(False)
             self.text_iqomah[name.lower()].setObjectName("txt_iqomah_" + name.lower())
             self.text_iqomah[name.lower()].setValidator(valid_iqomah)
@@ -302,7 +303,7 @@ class SettingsWindow(QMainWindow):
         self.tabWidget.setTabText(
                 self.tabWidget.indexOf(self.tab_reminders),
                 _translate("SettingsWindow", "Reminders"))
-        QtCore.QMetaObject.connectSlotsByName(self)
+        QMetaObject.connectSlotsByName(self)
 
     def apply_settings(self):
         location_settings = {

@@ -39,8 +39,20 @@ class MainWindow(QMainWindow):
         #self.txt_times.setObjectName("txt_times")
         #self.txt_times.setText(self.get_prayertime_text())
         #self.gridLayout.addWidget(self.txt_times, 1, 0, 1, 1)
-        self.set_prayertime_text()
+        self.lbl_prayername = {}
+        self.lbl_prayertime = {}
+        i = 1
+        for n in ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Midnight']:
+            self.lbl_prayername[n] = QLabel(self.centralwidget)
+            self.lbl_prayername[n].setAlignment(Qt.AlignLeft)
+            self.lbl_prayername[n].setText(n)
+            self.gridLayout.addWidget(self.lbl_prayername[n], i, 0, 1, 1)
 
+            self.lbl_prayertime[n] = QLabel(self.centralwidget)
+            self.lbl_prayertime[n].setAlignment(Qt.AlignCenter)
+            self.gridLayout.addWidget(self.lbl_prayertime[n], i, 1, 1, 1)
+            i += 1
+        self.set_prayertime()
 
         self.txt_date = QLabel(self.centralwidget)
         self.txt_date.setObjectName("txt_date")
@@ -107,7 +119,7 @@ class MainWindow(QMainWindow):
         self.tray_icon.show()
 
         # Settings window
-        self.settingswindow = SettingsWindow()
+        self.settingswindow = SettingsWindow(self)
 
     def closeEvent(self, event):
         if self.minimize_to_tray:
@@ -121,7 +133,7 @@ class MainWindow(QMainWindow):
                 2000
             )
 
-    def set_prayertime_text(self):
+    def set_prayertime(self):
         SettingsManager.refreshVariables(self.show_settings)
         SettingsManager.calcTimes()
 
@@ -130,21 +142,10 @@ class MainWindow(QMainWindow):
         #times['dhuhr'] = '08:02'
         #times['asr'] = '08:03'
 #        times['isha'] = '16:20'
-        lbl_prayername = {}
-        lbl_prayertime = {}
-        i = 1
         for n in ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Midnight']:
-            #output += (n + ': ' + times[n.lower()] + "\n")
-            lbl_prayername[n] = QLabel(self.centralwidget)
-            lbl_prayername[n].setAlignment(Qt.AlignLeft)
-            lbl_prayername[n].setText(n)
-            self.gridLayout.addWidget(lbl_prayername[n], i, 0, 1, 1)
+            self.lbl_prayertime[n].setText(times[n.lower()])
 
-            lbl_prayertime[n] = QLabel(self.centralwidget)
-            lbl_prayertime[n].setAlignment(Qt.AlignCenter)
-            lbl_prayertime[n].setText(times[n.lower()])
-            self.gridLayout.addWidget(lbl_prayertime[n], i, 1, 1, 1)
-            i += 1
+        self.alarm.stop_alarm()
         self.alarm.schedule_alarm(times)
         self.alarm.start()
         #return output

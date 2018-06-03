@@ -14,10 +14,12 @@ prayTimes = PrayTimes()
 #settingsmgr = SettingsManager()
 
 class SettingsWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, mainR):
         QMainWindow.__init__(self)
         _translate = QCoreApplication.translate
         
+        self.mainW = mainR
+
         self.setMinimumSize(QSize(360,240))
         self.setObjectName("SettingsWindow")
         self.centralwidget = QWidget(self)
@@ -332,6 +334,7 @@ class SettingsWindow(QMainWindow):
 
         sections = [location_settings, athan_settings, iqomah_settings]
         settings.apply_settings(sections)
+        self.mainW.set_prayertime()
 
     def setProvText(self, country):
         try: self.combo_prov.currentTextChanged.disconnect()

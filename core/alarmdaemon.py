@@ -15,8 +15,8 @@ class AlarmDaemon(QThread):
     def __init__(self, mainReference):
         QThread.__init__(self)
         self.scheduler = sched.scheduler(time.time, time.sleep)
-#        self.settingsmgr = SettingsManager()
         self.play_sound = None
+        self.next_alarm = None
         self.mute = False
         self.mainW = mainReference
 
@@ -86,6 +86,7 @@ class AlarmDaemon(QThread):
                     break
         else:
             # Only runs when program is run after Isha
+            # TODO this doesn't work/crashes the program
             settings.calcTimes(True)
             self.schedule_alarm(settings.times, nextDay=True)
 
@@ -101,8 +102,9 @@ class AlarmDaemon(QThread):
         print("It's not playing")
         return False
 
-    def stop_alarm(self, action):
-        self.scheduler.cancel(self.next_alarm)
+    def stop_alarm(self):
+        if self.next_alarm != None:
+            self.scheduler.cancel(self.next_alarm)
         print(self.scheduler.empty)
         print('alarm stopped')
 

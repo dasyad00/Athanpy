@@ -26,3 +26,4 @@ If you know how to program and feel there is a missing feature you can add yours
 * Athan sound from: http://www.islamweb.net/emainpage/index.php?page=adhan
 * Athan algorithm: http://praytimes.org/code/
 * Python sound library: http://simpleaudio.readthedocs.io/en/latest/
+* Coordinates of cities: https://simplemaps.com/data/world-cities
